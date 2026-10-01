@@ -10,6 +10,7 @@ add_compile_options(-Wall -Wextra)
 add_executable(pathfinder
     src/main.cpp
     src/core/grid.cpp
+    src/algorithms/BFS.cpp
 )
 
 target_include_directories(pathfinder PRIVATE src)
