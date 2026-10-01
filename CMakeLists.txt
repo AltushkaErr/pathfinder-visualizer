@@ -11,6 +11,7 @@ add_executable(pathfinder
     src/main.cpp
     src/core/grid.cpp
     src/algorithms/BFS.cpp
+    src/algorithms/DFS.cpp
 )
 
 target_include_directories(pathfinder PRIVATE src)

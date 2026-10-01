@@ -1,6 +1,7 @@
 #include <iostream>
 #include "core/grid.hpp"
 #include "algorithms/BFS.hpp"
+#include "algorithms/DFS.hpp"
 
 int main(int argc, char** argv){
     if (argc < 2){
@@ -29,6 +30,12 @@ int main(int argc, char** argv){
     std::cout << "Time: " << result.elapsedMs << " ms.\n";
     grid.print(result.path);
 
+    DFS dfs;
+    SearchResult result2 = dfs.run(grid);
+    std::cout << "Visited: " << result2.visitedNodes << '\n';
+    std::cout << "Path length: " << result2.path.size() << '\n';
+    std::cout << "Time: " << result2.elapsedMs << " ms.\n";
+    grid.print(result2.path);
 
     return 0;
 }

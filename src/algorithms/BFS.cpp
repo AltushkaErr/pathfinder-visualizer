@@ -23,7 +23,7 @@ SearchResult BFS::run(const Grid& grid){
     bool found = false;
 
     frontier.push(start);
-    visited[start.y * grid.width() + start.x] = true;
+    visited[start.y * grid.width() + start.x * grid.height()] = true;
 
     while (!frontier.empty()){
         Point cur = frontier.front();
