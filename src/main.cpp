@@ -2,6 +2,7 @@
 #include "core/grid.hpp"
 #include "algorithms/BFS.hpp"
 #include "algorithms/DFS.hpp"
+#include "algorithms/Dijkstra.hpp"
 
 int main(int argc, char** argv){
     if (argc < 2){
@@ -22,20 +23,26 @@ int main(int argc, char** argv){
 
     Grid grid = Grid::fromFile(argv[1]);
     grid.print();
-
+    std::cout << "\n=== BFS ===\n";
     BFS bfs;
     SearchResult result = bfs.run(grid);
     std::cout << "Visited: " << result.visitedNodes << '\n';
     std::cout << "Path length: " << result.path.size() << '\n';
     std::cout << "Time: " << result.elapsedMs << " ms.\n";
     grid.print(result.path);
-
+    std::cout << "\n=== DFS ===\n";
     DFS dfs;
     SearchResult result2 = dfs.run(grid);
     std::cout << "Visited: " << result2.visitedNodes << '\n';
     std::cout << "Path length: " << result2.path.size() << '\n';
     std::cout << "Time: " << result2.elapsedMs << " ms.\n";
     grid.print(result2.path);
-
+    std::cout << "\n=== Dijkstra ===\n";
+    Dijkstra dij;
+    SearchResult result3 = dij.run(grid);
+    std::cout << "Visited: " << result3.visitedNodes << '\n';
+    std::cout << "Path length: " << result3.path.size() << '\n';
+    std::cout << "Time: " << result3.elapsedMs << " ms.\n";
+    grid.print(result3.path);
     return 0;
 }
