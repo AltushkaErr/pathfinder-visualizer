@@ -33,7 +33,7 @@ SearchResult DFS::run(const Grid& grid){
             found = true;
             break;
         }
-
+        visited[start.y * grid.width() + start.x] = true;
         for (const Point& d : dirs){
             Point next{cur.x + d.x, cur.y + d.y};
             if (!grid.isWalkable(next)) continue;
@@ -41,10 +41,9 @@ SearchResult DFS::run(const Grid& grid){
             // parent[next] = cur;
             // frontierChain.push(next);
 
-            if (parent.find(next) == parent.end()){
-                parent[next] = cur;
-                frontierChain.push(next);
-            }
+            visited[next.y * grid.width() + next.x] = true;
+            parent[next] = cur;
+            frontierChain.push(next);
         }
         
     }
