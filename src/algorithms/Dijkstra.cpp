@@ -6,6 +6,12 @@
 #include <chrono>
 #include <algorithm>
 
+struct CompareNode {
+    bool operator()(const std::pair<int, Point>&a,
+                    const std::pair<int, Point>& b) const {
+        return a.first > b.first;
+    }
+};
 
 SearchResult Dijkstra::run(const Grid& grid){
     SearchResult result;

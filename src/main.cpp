@@ -3,6 +3,7 @@
 #include "algorithms/BFS.hpp"
 #include "algorithms/DFS.hpp"
 #include "algorithms/Dijkstra.hpp"
+#include "algorithms/AStar.hpp"
 
 int main(int argc, char** argv){
     if (argc < 2){
@@ -30,6 +31,7 @@ int main(int argc, char** argv){
     std::cout << "Path length: " << result.path.size() << '\n';
     std::cout << "Time: " << result.elapsedMs << " ms.\n";
     grid.print(result.path);
+
     std::cout << "\n=== DFS ===\n";
     DFS dfs;
     SearchResult result2 = dfs.run(grid);
@@ -37,6 +39,7 @@ int main(int argc, char** argv){
     std::cout << "Path length: " << result2.path.size() << '\n';
     std::cout << "Time: " << result2.elapsedMs << " ms.\n";
     grid.print(result2.path);
+
     std::cout << "\n=== Dijkstra ===\n";
     Dijkstra dij;
     SearchResult result3 = dij.run(grid);
@@ -44,5 +47,13 @@ int main(int argc, char** argv){
     std::cout << "Path length: " << result3.path.size() << '\n';
     std::cout << "Time: " << result3.elapsedMs << " ms.\n";
     grid.print(result3.path);
+
+    std::cout << "\n=== A* ===\n";
+    AStar astar;
+    SearchResult result4 = astar.run(grid);
+    std::cout << "Visited: " << result4.visitedNodes << '\n';
+    std::cout << "Path length: " << result4.path.size() << '\n';
+    std::cout << "Time: " << result4.elapsedMs << " ms.\n";
+    grid.print(result4.path);
     return 0;
 }
