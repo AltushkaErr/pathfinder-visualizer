@@ -29,6 +29,8 @@ SearchResult DFS::run(const Grid& grid){
         Point cur = frontierChain.top();
         frontierChain.pop();
         result.visitedNodes++;
+        result.visitOrder.push_back(cur);
+        
         if (cur == goal){
             found = true;
             break;

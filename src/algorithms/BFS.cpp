@@ -29,6 +29,8 @@ SearchResult BFS::run(const Grid& grid){
         Point cur = frontier.front();
         frontier.pop();
         result.visitedNodes++;
+        result.visitOrder.push_back(cur);
+        
         //if (!visited[cur.y * grid.width() + cur.x]){
         if (cur == goal){
             // обновление количества пройденых точек

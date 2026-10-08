@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <iomanip>
+#include <chrono>
 
 #include "core/grid.hpp"
 #include "algorithms/Algorithm.hpp"
@@ -85,17 +86,141 @@ int main(/*int argc, char** argv*/){
     //               << '\n';
     // }
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Pathfinder");
+    /// Testing draw the cell
+
+    // Grid grid = Grid::fromFile("assets/mazes/small.txt");
+    // const int CELL_SIZE = 60;
+    // sf::RenderWindow window(
+    //     sf::VideoMode(grid.width() * CELL_SIZE, grid.height() * CELL_SIZE),
+    //     "Pathfinder"
+    // );
+    // while (window.isOpen()){
+    //     sf::Event event;
+    //     while (window.pollEvent(event)){
+    //         if (event.type == sf::Event::Closed){
+    //             window.close();
+    //         }
+    //     }
+    //     window.clear(sf::Color::Black);
+
+    //     sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+    //     for (int y = 0; y < grid.height(); ++y){
+    //         for (int x = 0; x < grid.width(); ++x){
+    //             Point p {x, y};
+    //             char ch = grid.at(p);
+
+    //             sf::Color color;
+    //             if (ch == '#') color = sf::Color(40, 40, 40);
+    //             else if (ch == 'S') color = sf::Color::Green;
+    //             else if (ch == 'E') color = sf::Color::Red;
+    //             else color = sf::Color(220, 220, 220);
+
+    //             cell.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+    //             cell.setFillColor(color);
+    //             window.draw(cell);
+    //         }
+    //     }
+
+    //     window.display();
+    // }
+
+    Grid grid = Grid::fromFile("assets/mazes/small.txt");
+    std::vector<std::unique_ptr<Algorithm>> algorithms;
+    algorithms.push_back(std::make_unique<BFS>());
+    algorithms.push_back(std::make_unique<DFS>());
+    algorithms.push_back(std::make_unique<Dijkstra>());
+    algorithms.push_back(std::make_unique<AStar>());
+
+    int currentAlgo = 0;
+    SearchResult result = algorithms[currentAlgo]->run(grid);
+
+    const int CELL_SIZE = 60;
+    sf::RenderWindow window(
+        sf::VideoMode(grid.width() * CELL_SIZE, grid.height() * CELL_SIZE),
+        "Pathfinder"
+    );
+
+    // Counters for grid cell
+    size_t visitStep = 0;
+    size_t pathStep = 0;
+    auto lastUpdate = std::chrono::steady_clock::now();
+    // step animation
+    const int STEP_MS = 30;
 
     while (window.isOpen()){
         sf::Event event;
         while (window.pollEvent(event)){
-            if (event.type == sf::Event::Closed){
-                window.close();
+            if (event.type == sf::Event::Closed) window.close();
+            if (event.type == sf::Event::KeyPressed){
+                int newAlgo = -1;
+                if (event.key.code == sf::Keyboard::Num1) newAlgo = 0;
+                if (event.key.code == sf::Keyboard::Num2) newAlgo = 1;
+                if (event.key.code == sf::Keyboard::Num3) newAlgo = 2;
+                if (event.key.code == sf::Keyboard::Num4) newAlgo = 3;
+
+                if (newAlgo >= 0 && newAlgo != currentAlgo){
+                    currentAlgo = newAlgo;
+                    window.setTitle("Pathfindet - " + std::string(algorithms[currentAlgo]->name()));
+                    result = algorithms[currentAlgo]->run(grid);
+                    visitStep = 0;
+                    pathStep = 0;
+                    lastUpdate = std::chrono::steady_clock::now();
+                }
+
+                if (event.key.code == sf::Keyboard::R){
+                    visitStep = 0;
+                    pathStep = 0;
+                    lastUpdate = std::chrono::steady_clock::now();
+                }
+            }
+        }
+
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdate).count();
+        if (elapsed >= STEP_MS){
+            lastUpdate = now;
+            if (visitStep < result.visitOrder.size()){
+                visitStep++;
+            } else if (pathStep < result.path.size()){
+                pathStep++;
             }
         }
 
         window.clear(sf::Color::Black);
+        sf::RectangleShape cell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+        for (int y = 0; y < grid.height(); ++y){
+            for (int x = 0; x < grid.width(); ++x){
+                Point p { x, y};
+                char ch = grid.at(p);
+
+                sf::Color color;
+                if (ch == '#')      color = sf::Color(40, 40, 40);
+                else if (ch == 'S') color = sf::Color::Green;
+                else if (ch == 'E') color = sf::Color::Red;
+                else                color = sf::Color(220, 220, 220);
+
+                cell.setPosition(x * CELL_SIZE, y * CELL_SIZE);
+                cell.setFillColor(color);
+                window.draw(cell);
+            }
+            sf::RectangleShape visitedCell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+            visitedCell.setFillColor(sf::Color(155, 191, 244));
+            for (size_t i = 0; i < visitStep &&
+                               i < result.visitOrder.size(); ++i){
+                Point p = result.visitOrder[i];
+                visitedCell.setPosition(p.x * CELL_SIZE, p.y* CELL_SIZE);
+                window.draw(visitedCell);
+            }
+
+            sf::RectangleShape pathCell(sf::Vector2f(CELL_SIZE, CELL_SIZE));
+            pathCell.setFillColor(sf::Color(74, 128, 245));
+            for (size_t i = 0; i < pathStep && i < result.path.size(); ++i){
+                Point p = result.path[i];
+                pathCell.setPosition(p.x * CELL_SIZE, p.y * CELL_SIZE);
+                window.draw(pathCell);
+            }
+        }   
+
         window.display();
     }
 
