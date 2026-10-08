@@ -7,6 +7,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_compile_options(-Wall -Wextra)
 
+find_package(SFML 2.5 REQUIRED COMPONENTS graphics window system)
+
 add_executable(pathfinder
     src/main.cpp
     src/core/grid.cpp
@@ -17,3 +19,5 @@ add_executable(pathfinder
 )
 
 target_include_directories(pathfinder PRIVATE src)
+
+target_link_libraries(pathfinder PRIVATE sfml-graphics sfml-window sfml-system)
