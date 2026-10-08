@@ -3,6 +3,7 @@
 #include <vector>
 #include <iomanip>
 #include <chrono>
+#include <sstream>
 
 #include "core/grid.hpp"
 #include "algorithms/Algorithm.hpp"
@@ -134,7 +135,7 @@ int main(/*int argc, char** argv*/){
     int currentAlgo = 0;
     SearchResult result = algorithms[currentAlgo]->run(grid);
 
-    const int CELL_SIZE = 60;
+    const int CELL_SIZE = 90;
     sf::RenderWindow window(
         sf::VideoMode(grid.width() * CELL_SIZE, grid.height() * CELL_SIZE),
         "Pathfinder"
@@ -147,6 +148,19 @@ int main(/*int argc, char** argv*/){
     // step animation
     const int STEP_MS = 30;
 
+    sf::Font font;
+    if (!font.loadFromFile("assets/fonts/DejaVuSans.ttf")){
+        std::cerr << "Can't load fonts style\n";
+        return 1;
+    }
+
+    
+    sf::Text metricsText;
+    metricsText.setFont(font);
+    metricsText.setCharacterSize(16);
+    metricsText.setFillColor(sf::Color::White);
+    
+    /// Events processing 
     while (window.isOpen()){
         sf::Event event;
         while (window.pollEvent(event)){
@@ -220,6 +234,23 @@ int main(/*int argc, char** argv*/){
                 window.draw(pathCell);
             }
         }   
+        
+        /// Metrics algorithms
+
+        sf::RectangleShape metricsBg(sf::Vector2f(220, 110));
+        metricsBg.setFillColor(sf::Color(0,0,0,180));
+        metricsBg.setPosition(10, 10);
+        window.draw(metricsBg);
+
+        std::ostringstream oss;
+        oss << algorithms[currentAlgo]->name() << "\n"
+            << "Visited: " << result.visitedNodes << "\n"
+            << "Path Length: " << result.path.size() << "\n"
+            << "Time: " << result.elapsedMs << " ms";
+        
+        metricsText.setString(oss.str());
+        metricsText.setPosition(20, 20);
+        window.draw(metricsText);
 
         window.display();
     }
