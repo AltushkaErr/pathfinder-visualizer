@@ -50,6 +50,7 @@ SearchResult AStar::run(const Grid& grid){
         if (visited[cur]) continue;
         visited[cur] = true;
         result.visitedNodes++;
+        result.visitOrder.push_back(cur);
 
         if (cur == goal){
             found = true;
