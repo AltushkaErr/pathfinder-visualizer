@@ -1,8 +1,6 @@
 #pragma once
-#include <vector>
-#include "core/point.hpp"
-#include "core/grid.hpp"
-#include "core/searchResult.hpp"
+
+#include "Algorithm.hpp"
 
 // struct SearchResult {
 //     std::vector<Point> path;
@@ -10,7 +8,8 @@
 //     double elapsedMs {0.0}; // для сравнения
 // };
 
-class BFS {
+class BFS : public Algorithm{
 public:
-    SearchResult run(const Grid& grid);
+    SearchResult run(const Grid& grid) override;
+    const char* name() const override { return "BFS"; }
 };

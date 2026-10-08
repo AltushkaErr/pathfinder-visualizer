@@ -1,9 +1,10 @@
 #pragma once
-#include "core/grid.hpp"
-#include "core/searchResult.hpp"
+
+#include "Algorithm.hpp"
 
 
-class Dijkstra {
+class Dijkstra : public Algorithm{
 public:
-    SearchResult run(const Grid& grid);
+    SearchResult run(const Grid& grid) override;
+    const char* name() const override { return "Dijkstra"; }
 };

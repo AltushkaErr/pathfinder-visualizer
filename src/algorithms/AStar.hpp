@@ -1,12 +1,11 @@
 #pragma once
 
-#include "core/grid.hpp"
-#include "core/point.hpp"
-#include "core/searchResult.hpp"
+#include "Algorithm.hpp"
 
-class AStar {
+class AStar : public Algorithm {
 public:
-    SearchResult run(const Grid& grid);
+    SearchResult run(const Grid& grid) override;
+    const char* name() const override { return "A*"; }
 };
 
 
