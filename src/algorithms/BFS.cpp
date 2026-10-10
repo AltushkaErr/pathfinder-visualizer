@@ -31,7 +31,6 @@ SearchResult BFS::run(const Grid& grid){
         result.visitedNodes++;
         result.visitOrder.push_back(cur);
         
-        //if (!visited[cur.y * grid.width() + cur.x]){
         if (cur == goal){
             // обновление количества пройденых точек
             // окончание времени

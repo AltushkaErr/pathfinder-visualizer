@@ -17,11 +17,10 @@ Grid Grid::fromFile(const std::string& path) {
         }
         g.cells_.push_back(line);
     }
-    //std::cout << "Read complete. Close file\n.";
+    
 
     if (g.cells_.empty()) {
-        // std::cout << "Empty data. Emergency close.\n";
-        // return;
+        
         throw std::runtime_error("File empty: " + path);
     }
 
@@ -53,9 +52,6 @@ char Grid::at(Point p) const {
 }
 
 void Grid::print(const std::vector<Point>& path) const {
-    // for (const auto& row : cells_) {
-    //     std::cout << row << '\n';
-    // }
     std::vector<std::string> copy = cells_;
     for (const Point& p : path){
         if (inBounds(p) && copy[p.y][p.x] == '.'){
